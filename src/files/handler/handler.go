@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -16,5 +17,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		io.WriteString(w, string(data))
 	} else if r.Method == "POST" {
 		//接收数据并且保存
+		fmt.Println("upload")
 	}
 }
