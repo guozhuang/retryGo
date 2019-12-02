@@ -9,6 +9,7 @@ import (
 func main() {
 	//简单路由
 	http.HandleFunc("/file/upload", handler.UploadHandler)
+	http.HandleFunc("/file/upload/suc", handler.UploadSucHandler)
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		fmt.Errorf("cannot find server, err%s", err.Error())
