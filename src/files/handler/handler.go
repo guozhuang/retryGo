@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"files/meta"
+	"files/util"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,20 +30,29 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 		defer file.Close()
 
-		//上传文件的默认处理:进行迁移
-		//还没有进行重命名
-		newFile, err := os.Create("/tmp/" + head.Filename) //先存储到tmp目录下
+		//元数据处理:依旧不包含重命名机制
+		fileMeta := meta.FileMeta{
+			FileName: head.Filename,
+			Location: "/tmp/" + head.Filename,
+			UploadAt: time.Now().Format("2006-01-02 15:04:05"),
+		}
+
+		newFile, err := os.Create(fileMeta.Location) //先存储到tmp目录下
 		if err != nil {
 			fmt.Printf("fail create file err:%s", err.Error())
 			return
 		}
 		defer newFile.Close()
 
-		_, err = io.Copy(newFile, file) //将内存中的内容copy到对应的tmp目录下
+		fileMeta.FileSize, err = io.Copy(newFile, file) //将内存中的内容copy到对应的tmp目录下
 		if err != nil {
 			fmt.Printf("fail copy file err:%s", err.Error())
 			return
 		}
+
+		newFile.Seek(0, 0)
+		fileMeta.FileSha1 = util.FileSha1(newFile)
+		meta.UpdateFileMeta(fileMeta)
 
 		//上传完成，将对应状态进行重定向
 		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)
