@@ -25,3 +25,9 @@ func UpdateFileMeta(fMeta FileMeta) {
 func GetFileMeta(fileSha1 string) FileMeta {
 	return fileMetas[fileSha1]
 }
+
+//文件元数据清理
+func RemoveFileMeta(fileSha1 string) {
+	//todo:需要注意协程同步以及验证是否有问题
+	delete(fileMetas, fileSha1)
+}

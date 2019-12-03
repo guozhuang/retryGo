@@ -12,6 +12,7 @@ func main() {
 	http.HandleFunc("/file/upload/suc", handler.UploadSucHandler)
 	http.HandleFunc("/file/getFileMeta", handler.GetFileMetaHandler)
 	http.HandleFunc("/file/download", handler.DownloadHandler)
+	http.HandleFunc("/file/delete", handler.DeleteHandler)
 	err := http.ListenAndServe(":8081", nil)
 	if err != nil {
 		fmt.Errorf("cannot find server, err%s", err.Error())

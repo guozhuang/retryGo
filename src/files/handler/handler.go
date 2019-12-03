@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"encoding/json"
+	"encoding/json" //后面切换使用性能更好的json格式化库
 	"files/meta"
 	"files/util"
 	"fmt"
@@ -82,6 +82,7 @@ func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+//文件根据散列值进行下载
 func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
@@ -105,4 +106,17 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/octect-stream")
 	w.Header().Set("Content-Descrption", "attachment;filename=\""+fileMeta.FileName+"\"")
 	w.Write(data)
+}
+
+//文件删除
+func DeleteHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	fileHash := r.Form["filehash"][0]
+	fileMeta := meta.GetFileMeta(fileHash)
+	//todo:需要进行删除容错
+	os.Remove(fileMeta.Location)
+
+	meta.RemoveFileMeta(fileHash)
+	w.WriteHeader(http.StatusOK)
 }
