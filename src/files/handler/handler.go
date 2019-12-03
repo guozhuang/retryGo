@@ -81,3 +81,28 @@ func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write(data)
 }
+
+func DownloadHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	fileHash := r.Form["filehash"][0]
+
+	fileMeta := meta.GetFileMeta(fileHash)
+
+	f, err := os.Open(fileMeta.Location)
+	if err != nil {
+		fmt.Printf("download open file err:%s", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	defer f.Close()
+
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		fmt.Printf("download read file err:%s", err.Error())
+	}
+
+	w.Header().Set("Content-Type", "application/octect-stream")
+	w.Header().Set("Content-Descrption", "attachment;filename=\""+fileMeta.FileName+"\"")
+	w.Write(data)
+}
