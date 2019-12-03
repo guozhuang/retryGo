@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"files/meta"
 	"files/util"
 	"fmt"
@@ -61,4 +62,22 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 func UploadSucHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "upload finish")
+}
+
+//根据filehash【通过sha1sum命令获取】获取fileMeta
+func GetFileMetaHandler(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	fileHash := r.Form["filehash"][0]
+
+	fileMeta := meta.GetFileMeta(fileHash)
+
+	data, err := json.Marshal(fileMeta)
+	if err != nil {
+		fmt.Printf("json encode err:%s", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(data)
 }

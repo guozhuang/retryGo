@@ -12,6 +12,7 @@ type FileMeta struct {
 var fileMetas map[string]FileMeta //包内全局的元数据信息，key使用sha1
 
 func init() {
+	//暂存在程序内存中
 	fileMetas = make(map[string]FileMeta)
 }
 
