@@ -1,0 +1,5 @@
+package msg
+
+func sendMsg() {
+	//
+}
