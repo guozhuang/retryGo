@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 func getNoRepeatStrLen(s string) int {
 	maxLen := 0
 
@@ -30,12 +28,5 @@ func getNoRepeatStrLen(s string) int {
 }
 
 func main() {
-	testStr := "abcabc"
-	fmt.Println("abcabc :", getNoRepeatStrLen(testStr))
-
-	testStr1 := "bbb"
-	fmt.Println("bbb :", getNoRepeatStrLen(testStr1))
-
-	testStr2 := "黑暗中有什么不是黑暗的呢！"
-	fmt.Println("", getNoRepeatStrLen(testStr2))
+	//
 }
