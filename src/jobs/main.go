@@ -26,9 +26,9 @@ func main() {
 	fmt.Println("hello jobs!")
 
 	//简单实现任务系统
-	//single()
+	single()
 
-	count := 50
+	/*count := 50
 
 	//生成对应协程的读取文件
 	//cmdFiles(count)
@@ -44,7 +44,7 @@ func main() {
 		if count == 0 {
 			close(ch)
 		}
-	}
+	}*/
 }
 
 func cmdFiles(count int) {
@@ -102,13 +102,56 @@ func mkDir(dir string) {
 }
 
 func single() {
-	//picUrlData := fetchFile("/Users/momo/Documents/feature/pic.csv")
+	//因为使用结构存储之后，顺序本身就会出现错乱
+	fi, err := os.Open("/Users/momo/Documents/feature/pic.csv")
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+	}
+	defer fi.Close()
 
-	//先做一个扫描文件，并且根据对应文件内容，下载图片到指定目录
-	/*for k, _ := range picUrlData {
-		//fmt.Println(k)
-		//downPic(k)
-	}*/
+	br := bufio.NewReader(fi)
+
+	dirName := ""
+	for {
+		a, _, c := br.ReadLine()
+		if c == io.EOF {
+			break
+		}
+
+		url := string(a)
+
+		if strings.Contains(url, "ics:") {
+			//进行截断
+			dirName = "/Users/momo/Documents/album/" + url[5:] + "/"
+
+			mkcmd := "mkdir " + dirName
+
+			mkCmd := exec.Command("bash", "-c", mkcmd)
+			_, err := mkCmd.CombinedOutput()
+
+			if err != nil {
+				fmt.Println("sed err:", err.Error())
+			}
+			fmt.Println("start mk", dirName)
+		} else {
+			fmt.Println("start", dirName)
+			target := dirName
+
+			picName := url[39:]
+
+			resp, err := http.Get(url)
+
+			if err != nil || resp.StatusCode != 200 {
+				log.Println("下载图片错误", url, err)
+			}
+
+			body, _ := ioutil.ReadAll(resp.Body)
+
+			out, _ := os.Create(target + picName)
+
+			io.Copy(out, bytes.NewReader(body))
+		}
+	}
 }
 
 func opt(i int) {
