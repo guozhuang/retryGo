@@ -31,6 +31,7 @@ func errIsNotExist(writer http.ResponseWriter, r *http.Request) error {
 	return os.ErrNotExist
 }
 
+//测试errhandler
 func TestErrHandle(t *testing.T) {
 	tests := []struct {
 		Handle  appHandler
@@ -51,6 +52,36 @@ func TestErrHandle(t *testing.T) {
 		re(resp, request)
 		//进行验证
 		verifyResponse(resp.Result(), tt.Code, tt.Message, t)
+	}
+}
+
+//测试server:不用假参数测试，而是真实使用一个server进行测试
+func TestErrHandleInServer(t *testing.T) {
+	tests := []struct {
+		Handle  appHandler
+		Code    int
+		Message string
+	}{
+		{errPanic, http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError)},
+		{errUserError, http.StatusBadRequest, http.StatusText(http.StatusBadRequest)},
+		{errIsNotExist, http.StatusNotFound, http.StatusText(http.StatusNotFound)},
+	}
+
+	for _, tt := range tests {
+		f := ErrHandle(tt.Handle)
+
+		//不进行构造请求，而是直接运行server
+		server := httptest.NewServer(http.HandlerFunc(f)) //将函数转化为interface
+
+		resp, _ := http.Get(server.URL)
+		b, _ := ioutil.ReadAll(resp.Body)
+		body := strings.Trim(string(b), "\n")
+
+		if resp.StatusCode != tt.Code || body != tt.Message {
+			t.Errorf("expect (%d, %s); "+"got (%d, %s)",
+				tt.Code, tt.Message,
+				resp.StatusCode, body)
+		}
 	}
 }
 
