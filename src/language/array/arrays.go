@@ -12,8 +12,13 @@ func optMultiArr(args [4][5]int) {
 }
 
 func main() {
-	multiArr := [4][5]int{}
+	/*multiArr := [4][5]int{}
 
-	optMultiArr(multiArr)
-	//
+	optMultiArr(multiArr)*/
+
+	box := [256]int{} //创建定长数组
+	for k, _ := range box {
+		box[k] = k
+	}
+	fmt.Println(box)
 }

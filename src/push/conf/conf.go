@@ -11,6 +11,7 @@ type conf struct {
 	MgoDb     string `yaml:"mongodb"`
 }
 
+//进行环境包的分割
 func (c *conf) getConf() *conf {
 	yamlFile, err := ioutil.ReadFile("conf/conf.yaml")
 	if err != nil {
