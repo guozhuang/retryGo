@@ -1,13 +1,13 @@
 package mock
 
-type Retriever struct {
+type Retrieve struct {
 	Contents string
 }
 
 //这里细节处仅需要对应的结构体实现了被调用者的get方法
 //只不过因为这个是测试用例，真正的项目中，肯定是先写当前的被调用者，
 // 然后再调用者定义接口
-func (r Retriever) Get(url string) string {
+func (r Retrieve) Get(url string) string {
 	return r.Contents
 }
 

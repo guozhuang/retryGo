@@ -19,7 +19,7 @@ func download(r Retriever) string {
 func main() {
 	var r Retriever
 
-	r = mock.Retriever{"this is test mock"}
+	r = mock.Retrieve{"this is test mock"}
 	//fmt.Println(download(r))
 	// 将被调用者的结构体进行调用者接口化处理为接口变量
 	// 接口变量进行传参，在调用者函数上声明传入的参数声明调用者的interface参数
@@ -28,7 +28,7 @@ func main() {
 	fmt.Printf("%T, %v\n", r, r)
 	inspect(r)
 
-	r = &real.Retriever{
+	r = &real.Retrieve{
 		Ua:      "ios",
 		TimeOUt: time.Minute,
 	}
@@ -41,9 +41,9 @@ func main() {
 //对interface根据类型处理
 func inspect(r Retriever) {
 	switch v := r.(type) {
-	case mock.Retriever:
+	case mock.Retrieve:
 		fmt.Println(v.Contents)
-	case *real.Retriever:
+	case *real.Retrieve:
 		fmt.Println(v.Ua)
 	}
 }

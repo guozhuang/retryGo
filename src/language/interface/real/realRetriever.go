@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Retriever struct {
+type Retrieve struct {
 	Ua      string
 	TimeOUt time.Duration
 }
@@ -14,7 +14,7 @@ type Retriever struct {
 //这样就通过实现对应的逻辑，调用者通过声明接口，
 // 从而将一些逻辑invoke到相应的被调用者中，
 //进而实现了比较复杂的结构的interface的组织形式
-func (r *Retriever) Get(url string) string {
+func (r *Retrieve) Get(url string) string {
 	resp, err := http.Get(url)
 
 	if err != nil {
