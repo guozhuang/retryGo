@@ -20,7 +20,7 @@ func (node *treeNode) setNodeVal(val int) {
 	//修改值使用指针接收者
 }
 
-func main() {
+func test1() {
 
 	var root treeNode
 

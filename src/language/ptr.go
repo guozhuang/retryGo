@@ -14,7 +14,7 @@ func notPtr(num *int) {
 	//num = num + 1
 	//这才是指针不能进行运算的形式
 }
-func main() {
+func test() {
 	name := "hello"
 	setName(&name)
 	fmt.Println(name)
