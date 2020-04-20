@@ -1,2 +1,0 @@
-mongodbUrl: mongodb://admin:123456@localhost:27017/test?authMechanism=SCRAM-SHA-1
-mongodb: test
