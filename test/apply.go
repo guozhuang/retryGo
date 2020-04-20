@@ -19,7 +19,7 @@ func Apply(op func(int, int) int, a, b int) int {
 
 /**
 再后面使用接口来约束相应的方法，并且进行接口方法的代理实现，同样使用的也是函数式编程的思路
-
+【更加灵活地约束和接口实现】
 result := test.Apply(test.Mul, 3, 5)
 
 	fmt.Println(result)
