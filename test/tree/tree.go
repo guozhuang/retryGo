@@ -2,6 +2,7 @@ package tree
 
 import "fmt"
 
+//命名规范问题，前缀不好重复
 type Node struct {
 	Value       int
 	Left, Right *Node
