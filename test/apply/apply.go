@@ -1,4 +1,4 @@
-package test
+package apply
 
 //实现类似用途函数的封装和调用灵活【apply】
 func Add(a, b int) int {
