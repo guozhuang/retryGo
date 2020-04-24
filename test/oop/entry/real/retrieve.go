@@ -29,3 +29,10 @@ func (r *Retrieve) Get(url string) string {
 
 	return string(result)
 }
+
+//新扩展的方法
+func (r *Retrieve) Post(url string, data map[string]string) string {
+	//
+
+	return ""
+}

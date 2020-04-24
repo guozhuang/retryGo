@@ -16,6 +16,29 @@ func download(r Retriever) string {
 	return r.Get("http://www.baidu.com")
 }
 
+//新增一个接口
+type Poster interface {
+	Post(url string, data map[string]string) string
+}
+
+//进行接口组合【扩充了整体的功能，于是需要实现该接口的结构体也需要扩展新的方法】
+type RectrieverAndPoster interface {
+	Retriever
+	Poster
+}
+
+//使用组合后的新接口变量作为参数
+func newInterface(s RectrieverAndPoster) string {
+	re := s.Post("", map[string]string{
+		"user": "world",
+	})
+
+	fmt.Println(re)
+
+	res := s.Get("")
+	return res
+}
+
 func main() {
 	//使用接口变量
 	var r Retriever
@@ -47,4 +70,12 @@ func main() {
 	case *real.Retrieve:
 		fmt.Println("real", v.UserAgent)
 	}
+
+	//接口组合的使用
+	var s RectrieverAndPoster
+	s = &mock.Retrieve{
+		Contents: "hello",
+	}
+
+	fmt.Println(newInterface(s)) // world\nhello//此处的方法就是实现了组合接口的方式【先调用了post后调用了get并且返回了get的结构】
 }
