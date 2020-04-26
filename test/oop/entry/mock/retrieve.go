@@ -1,5 +1,7 @@
 package mock
 
+import "fmt"
+
 //此处是被调用者
 type Retrieve struct {
 	Contents string
@@ -17,4 +19,9 @@ func (r *Retrieve) Post(url string, data map[string]string) string {
 	}
 
 	return ""
+}
+
+//此时retrieve实现了stringer接口，所以在使用fmt的print方法时，就会自动调用这里的方法
+func (r *Retrieve) String() string {
+	return fmt.Sprintf("retrieve ins stringer: %s", r.Contents)
 }

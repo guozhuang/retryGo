@@ -50,7 +50,7 @@ func main() {
 	}
 
 	//对接口变量的类型%T可以看出其类型的不同，于是又引出了通过接口来实现多态【type】
-	fmt.Printf("%T, %v\n", r, r)
+	fmt.Printf("%T, %v\n", r, r) //mock的struct具备了String方法便实现了stringer类型，外层调用者在使用print时，就会调用mock中的String方法
 
 	//real
 	r = &real.Retrieve{
