@@ -32,9 +32,23 @@ func errWrapper(
 	handler appHandler) func(w http.ResponseWriter, r *http.Request) {
 	return func(writer http.ResponseWriter,
 		request *http.Request) {
+		//进行未知可能出现panic的recover的处理
+		//defer
+
 		//实现了中间层的代理调用，并且实现异常捕获
 		err := handler(writer, request)
 		if err != nil {
+			//自定义层面的错误[判定错误类型]
+			if userErr, ok := err.(UserError); ok {
+				//将错误的结果：例如用户填写信息不完整之类，外加标准状态码返回
+				//如果状态码复杂的话，这里新增扩展判断即可
+				http.Error(writer,
+					userErr.Message(),
+					http.StatusForbidden)
+
+				return
+			}
+
 			//进行错误处理的标准化[映射处理：错误转化]
 			code := http.StatusOK
 			switch {
@@ -50,6 +64,12 @@ func errWrapper(
 				http.StatusText(code), code)
 		}
 	}
+}
+
+//新增自定义的错误类型
+type UserError interface {
+	error
+	Message() string
 }
 
 //由于存在errWrapper函数，使得每一个handler本身有中间层封装，返回对应err结果
