@@ -160,15 +160,26 @@ func main() {
 	//生成两路chan
 	ch1 := generator()
 	ch2 := generator()
+
+	//time.Tick进行定时器处理分支【例如作为查看积压队列情况】
+	tick := time.Tick(time.Second)
 	for {
 		//同时这里可以将拿到的数据再发给别的位置
 		select {
-		//也可以结合done模式和超时模式来进行处理
+		//也可以结合done模式和超时模式来进行处理【添加计时器来进行判断】
 		case n := <-ch1:
 			fmt.Printf("channel1:%d\n", n)
 
 		case m := <-ch2:
 			fmt.Printf("channel2:%d\n", m)
+		//超时分支处理【进入select的耗时判断】
+		case <-time.After(1000 * time.Microsecond):
+			fmt.Println("timeout")
+
+		//定时器分支【例如输出消费挤压情况】
+		case <-tick:
+			fmt.Println("this is")
 		}
+
 	}
 }
