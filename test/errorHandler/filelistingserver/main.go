@@ -38,7 +38,7 @@ func errWrapper(
 		//实现了中间层的代理调用，并且实现异常捕获
 		err := handler(writer, request)
 		if err != nil {
-			//自定义层面的错误[判定错误类型]
+			//自定义层面的错误[判定错误类型][类型断言]
 			if userErr, ok := err.(UserError); ok {
 				//将错误的结果：例如用户填写信息不完整之类，外加标准状态码返回
 				//如果状态码复杂的话，这里新增扩展判断即可
