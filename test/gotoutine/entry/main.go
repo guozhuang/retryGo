@@ -128,7 +128,7 @@ func main() {
 	for _, worker := range workers {
 		//因为填写了两次，所以两次done,这样实现就不是完全同步完成了
 		<-worker.done
-		<-worker.done
+		<-worker.done //实际上这里的阻塞就完成了整体任务的所有等待时间
 	}
 
 	//实际上这样固定数量完成任务直接使用waitGroup即可
