@@ -38,7 +38,7 @@ func main() {
 }*/
 
 //使用生成器的方式来对应相应worker的channel创建
-//新增箭头用来明确外部使用chan的用途
+//新增箭头用来明确外部使用chan的用途【规范使用】
 func createWorker(id int) chan<- int {
 	ch := make(chan int)
 	go func() {
