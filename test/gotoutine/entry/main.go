@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 /*func worker(id int, ch chan int) {
@@ -76,7 +78,7 @@ func main() {
 //更加工程化的实现模式：
 
 //新增支持done的worker的标准结构
-type worker struct {
+/*type worker struct {
 	in   chan int
 	done chan bool
 }
@@ -101,9 +103,9 @@ func doWork(id int, ch <-chan int, done chan bool) {
 		done <- true //如果这样触发的话，因为下面重复写入chan，但是第一次的done没有完成接收，因为接收者的逻辑还在写入的逻辑的下面
 		//导致下一次写入数据始终被阻塞，也无法消费done的chan，导致deadlock
 		//因为是只有十个worker，下次的写入之前就需要消费
-		/*go func() {
+		go func() {
 			done <- true
-		}()*/
+		}()
 	}
 }
 
@@ -134,4 +136,39 @@ func main() {
 	//实际上这样固定数量完成任务直接使用waitGroup即可
 
 	//time.Sleep(time.Microsecond * 1000)//将无脑休眠去掉
+}*/
+
+//select的使用[for+select]
+func generator() chan int {
+	out := make(chan int)
+
+	go func() {
+		for {
+			num := rand.Intn(1000)
+			//目的是形成两路速度不同的channel
+			time.Sleep(time.Microsecond * time.Duration(num))
+
+			//进行chan写入
+			out <- num
+		}
+	}()
+
+	return out
+}
+
+func main() {
+	//生成两路chan
+	ch1 := generator()
+	ch2 := generator()
+	for {
+		//同时这里可以将拿到的数据再发给别的位置
+		select {
+		//也可以结合done模式和超时模式来进行处理
+		case n := <-ch1:
+			fmt.Printf("channel1:%d\n", n)
+
+		case m := <-ch2:
+			fmt.Printf("channel2:%d\n", m)
+		}
+	}
 }
