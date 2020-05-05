@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func worker(id int, ch chan int) {
+/*func worker(id int, ch chan int) {
 	for {
 		//从channel中读数据
 		fmt.Printf("worker %d data is %c\n", id, <-ch)
@@ -30,6 +30,36 @@ func main() {
 	}
 
 	//重复填充
+	for i := 0; i < 10; i++ {
+		channels[i] <- 'A' + i //单引号的字符使用
+	}
+
+	time.Sleep(time.Microsecond * 1000)
+}*/
+
+//使用生成器的方式来对应相应worker的channel创建
+func createWorker(id int) chan int {
+	ch := make(chan int)
+	go func() {
+		for {
+			//这种实现模式也是为啥golang中死循环非常多的原因
+			fmt.Printf("worker %d data is %c\n", id, <-ch)
+		}
+	}()
+	return ch
+}
+
+func main() {
+	var channels [10]chan int
+
+	for i := 0; i < 10; i++ {
+		channels[i] = createWorker(i)
+	}
+
+	for i := 0; i < 10; i++ {
+		channels[i] <- 'a' + i //单引号的字符使用
+	}
+
 	for i := 0; i < 10; i++ {
 		channels[i] <- 'A' + i //单引号的字符使用
 	}
